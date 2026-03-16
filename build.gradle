@@ -117,6 +117,7 @@ buildscript {
         classpath "com.vanniktech:gradle-android-javadoc-plugin:0.3.0-SNAPSHOT"
         classpath "de.mannodermaus.gradle.plugins:android-junit5:1.2.0.0"
         classpath "eu.davidea:grabver:1.0.0"
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -124,23 +125,11 @@ buildscript {
 
 subprojects {
     afterEvaluate { project ->
-        // Only apply to Android library modules
         if (project.plugins.hasPlugin('com.android.library')) {
-            project.apply plugin: 'maven-publish'
+            project.apply plugin: 'com.github.dcendents.android-maven'
 
-            project.publishing {
-                publications {
-                    mavenAar(MavenPublication) {
-                        // Multi-module JitPack projects require the repo name in the group
-                        groupId = 'com.github.nurture-farm.FlexibleAdapter'
-                        artifactId = project.name
-                        version = 'v5.1.0-java17'
-
-                        // Point directly to the compiled AAR for older Android Gradle Plugins
-                        artifact("$buildDir/outputs/aar/${project.name}-release.aar")
-                    }
-                }
-            }
+            // Required for JitPack multi-module resolution
+            project.group = 'com.github.nurture-farm.FlexibleAdapter'
         }
     }
 }
