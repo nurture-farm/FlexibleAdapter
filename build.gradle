@@ -123,24 +123,24 @@ buildscript {
 }
 
 subprojects {
-    afterEvaluate { project ->
-        // Only target the Android library modules
-        if (project.plugins.hasPlugin('com.android.library')) {
-            project.apply plugin: 'maven-publish'
+    // plugins.withId reacts IMMEDIATELY when a module declares itself as an Android library.
+    // This makes the 'maven-publish' plugin visible to JitPack's initial scanner.
+    plugins.withId('com.android.library') {
+        project.apply plugin: 'maven-publish'
 
-            // MAGIC LINE: Force Gradle to compile the AAR before it tries to publish it
-            project.tasks.getByName('publishToMavenLocal').dependsOn('assembleRelease')
-
+        project.afterEvaluate {
             project.publishing {
                 publications {
                     mavenAar(MavenPublication) {
                         groupId = 'com.github.nurture-farm.FlexibleAdapter'
                         artifactId = project.name
-                        // You can hardcode your current tag here, e.g., 'v5.1.0-stable'
-                        version = 'v5.1.0-stable'
+                        version = 'v5.1.0-stable-5' // Update this to match your new tag
 
-                        // Point to the AAR that will now definitely exist
-                        artifact("$buildDir/outputs/aar/${project.name}-release.aar")
+                        // The 'builtBy' command explicitly tells Gradle it MUST run
+                        // assembleRelease before it is allowed to publish the AAR.
+                        artifact("$buildDir/outputs/aar/${project.name}-release.aar") {
+                            builtBy tasks.getByName('assembleRelease')
+                        }
                     }
                 }
             }
