@@ -1,5 +1,7 @@
 apply plugin: 'maven-publish'
 apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+group = 'com.github.nurture-farm.FlexibleAdapter'
 apply plugin: 'com.vanniktech.android.javadoc'
 apply plugin: 'eu.davidea.grabver'
 
@@ -52,20 +54,4 @@ if (project.hasProperty('all') || project.hasProperty('adapter')) {
     apply from: '../maven-publish.gradle'
     apply from: '../jfrog-bintray-publish.gradle'
     //apply from: '../jfrog-artifactory-publish.gradle'
-}
-
-project.afterEvaluate {
-    publishing {
-        publications {
-            maven(MavenPublication) {
-                // Safest approach for older AGP versions
-                artifact("$buildDir/outputs/aar/${project.name}-release.aar")
-
-                // Matches the group JitPack is expecting
-                groupId = 'com.github.nurture-farm'
-                artifactId = project.name
-                version = 'v5.1.0-java17-fix'
-            }
-        }
-    }
 }

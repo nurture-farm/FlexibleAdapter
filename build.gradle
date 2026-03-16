@@ -122,14 +122,3 @@ buildscript {
         // in the individual module build.gradle files
     }
 }
-
-subprojects {
-    afterEvaluate { project ->
-        if (project.plugins.hasPlugin('com.android.library')) {
-            project.apply plugin: 'com.github.dcendents.android-maven'
-
-            // Required for JitPack multi-module resolution
-            project.group = 'com.github.nurture-farm.FlexibleAdapter'
-        }
-    }
-}
