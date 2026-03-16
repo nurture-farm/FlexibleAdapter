@@ -1,7 +1,4 @@
-apply plugin: 'maven-publish'
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-group = 'com.github.nurture-farm.FlexibleAdapter'
 apply plugin: 'com.vanniktech.android.javadoc'
 apply plugin: 'eu.davidea.grabver'
 

@@ -1,6 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-group = 'com.github.nurture-farm.FlexibleAdapter'
 apply plugin: 'de.mannodermaus.android-junit5'
 apply plugin: 'eu.davidea.grabver'
 

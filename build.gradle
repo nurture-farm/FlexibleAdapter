@@ -117,8 +117,33 @@ buildscript {
         classpath "com.vanniktech:gradle-android-javadoc-plugin:0.3.0-SNAPSHOT"
         classpath "de.mannodermaus.gradle.plugins:android-junit5:1.2.0.0"
         classpath "eu.davidea:grabver:1.0.0"
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
+    }
+}
+
+subprojects {
+    afterEvaluate { project ->
+        // Only target the Android library modules
+        if (project.plugins.hasPlugin('com.android.library')) {
+            project.apply plugin: 'maven-publish'
+
+            // MAGIC LINE: Force Gradle to compile the AAR before it tries to publish it
+            project.tasks.getByName('publishToMavenLocal').dependsOn('assembleRelease')
+
+            project.publishing {
+                publications {
+                    mavenAar(MavenPublication) {
+                        groupId = 'com.github.nurture-farm.FlexibleAdapter'
+                        artifactId = project.name
+                        // You can hardcode your current tag here, e.g., 'v5.1.0-stable'
+                        version = 'v5.1.0-stable'
+
+                        // Point to the AAR that will now definitely exist
+                        artifact("$buildDir/outputs/aar/${project.name}-release.aar")
+                    }
+                }
+            }
+        }
     }
 }
