@@ -121,3 +121,26 @@ buildscript {
         // in the individual module build.gradle files
     }
 }
+
+subprojects {
+    afterEvaluate { project ->
+        // Only apply to Android library modules
+        if (project.plugins.hasPlugin('com.android.library')) {
+            project.apply plugin: 'maven-publish'
+
+            project.publishing {
+                publications {
+                    mavenAar(MavenPublication) {
+                        // Multi-module JitPack projects require the repo name in the group
+                        groupId = 'com.github.nurture-farm.FlexibleAdapter'
+                        artifactId = project.name
+                        version = 'v5.1.0-java17'
+
+                        // Point directly to the compiled AAR for older Android Gradle Plugins
+                        artifact("$buildDir/outputs/aar/${project.name}-release.aar")
+                    }
+                }
+            }
+        }
+    }
+}
